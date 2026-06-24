@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>深圳日结精选 · 每日人工筛选深圳真实日结周结信息</title>
+  <meta name="description" content="每日人工筛选深圳本地日结、周结信息，标注来源与核实状态。促销、派发、活动执行、搬运、客服、数据录入等各类临时活，真实可查，每日更新。" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: {
+        colors: {
+          brand: { 50:'#f0fdfa',100:'#ccfbf1',200:'#99f6e4',300:'#5eead4',400:'#2dd4bf',500:'#14b8a6',600:'#0d9488',700:'#0f766e',800:'#115e59',900:'#134e4a' },
+          accent: { 400:'#fb923c',500:'#f97316',600:'#ea580c' }
+        },
+        fontFamily: { sans:['"PingFang SC"','"Microsoft YaHei"','system-ui','sans-serif'] }
+      }}
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif; }
+    .hero-bg {
+      background:
+        radial-gradient(1000px 500px at 85% -10%, rgba(20,184,166,.18), transparent 60%),
+        radial-gradient(800px 400px at 0% 100%, rgba(249,115,22,.10), transparent 60%),
+        linear-gradient(180deg,#0f766e 0%,#0d9488 50%,#134e4a 100%);
+    }
+    .card-hover { transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 24px -8px rgba(13,148,136,.2); border-color:#5eead4; }
+    .chip { transition: all .15s ease; cursor:pointer; }
+    .chip.active { background:#0d9488; color:#fff; border-color:#0d9488; }
+    .reveal { opacity:0; transform:translateY(16px); transition:opacity .5s ease, transform .5s ease; }
+    .reveal.show { opacity:1; transform:translateY(0); }
+    .nav-link { position:relative; }
+    .nav-link::after { content:''; position:absolute; left:0; bottom:-4px; height:2px; width:0; background:#0d9488; transition:width .25s ease; }
+    .nav-link:hover::after { width:100%; }
+    ::selection { background:#0d9488; color:#fff; }
+    .detail { max-height:0; overflow:hidden; transition:max-height .35s ease; }
+    .detail.open { max-height:500px; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+
+  <!-- 顶部导航 -->
+  <header id="top" class="fixed top-0 inset-x-0 z-50 bg-white/90 backdrop-blur border-b border-slate-200">
+    <nav class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="#top" class="flex items-center gap-2 font-bold text-lg">
+        <span class="w-9 h-9 rounded-lg bg-brand-600 text-white grid place-items-center font-black">日</span>
+        <span class="text-slate-900">深圳日结精选</span>
+      </a>
+      <ul class="hidden md:flex items-center gap-8 text-sm text-slate-600">
+        <li><a class="nav-link hover:text-brand-700" href="#list">今日信息</a></li>
+        <li><a class="nav-link hover:text-brand-700" href="#how">怎么筛选</a></li>
+        <li><a class="nav-link hover:text-brand-700" href="#subscribe">订阅推送</a></li>
+        <li><a class="nav-link hover:text-brand-700" href="#post">发包/接活</a></li>
+      </ul>
+      <div class="flex items-center gap-3">
+        <a href="#subscribe" class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-accent-500 hover:bg-accent-600 text-white text-sm font-semibold transition">关注公众号</a>
+        <button id="menuBtn" class="md:hidden w-10 h-10 grid place-items-center rounded-lg border border-slate-200" aria-label="菜单">
+          <svg id="menuIcon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+      </div>
+    </nav>
+    <div id="mobileMenu" class="md:hidden hidden border-t border-slate-100 bg-white">
+      <ul class="px-4 py-3 space-y-1 text-slate-700">
+        <li><a class="block py-2.5 px-2 rounded hover:bg-slate-50" href="#list">今日信息</a></li>
+        <li><a class="block py-2.5 px-2 rounded hover:bg-slate-50" href="#how">怎么筛选</a></li>
+        <li><a class="block py-2.5 px-2 rounded hover:bg-slate-50" href="#subscribe">订阅推送</a></li>
+        <li><a class="block py-2.5 px-2 rounded hover:bg-slate-50" href="#post">发包/接活</a></li>
+        <li><a class="block py-2.5 px-2 rounded bg-accent-500 text-white font-semibold text-center mt-2" href="#subscribe">关注公众号</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero-bg pt-28 pb-16 sm:pt-36 sm:pb-20 text-white relative overflow-hidden">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="max-w-3xl">
+        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 ring-1 ring-white/25 text-xs sm:text-sm">
+          <span class="w-2 h-2 rounded-full bg-green-300 animate-pulse"></span>
+          <span id="todayLabel">今日更新中</span> · 人工筛选 · 标注来源
+        </span>
+        <h1 class="mt-5 text-4xl sm:text-5xl font-black leading-tight">
+          深圳日结 · 周结信息<br/>
+          <span class="text-brand-200">每日人工精选，真实可查</span>
+        </h1>
+        <p class="mt-5 text-base sm:text-lg text-brand-50/90 leading-relaxed max-w-2xl">
+          不爬虫、不搬运、不瞎编。每天从公开渠道人工筛选深圳本地日结周结信息，逐条标注来源和核实状态。促销、派发、活动、搬运、客服、数据录入各类临时活，看清楚再联系。
+        </p>
+        <div class="mt-8 flex flex-col sm:flex-row gap-3">
+          <a href="#list" class="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-accent-500 hover:bg-accent-600 text-white font-bold shadow-lg shadow-accent-600/30 transition">
+            查看今日信息
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a href="#subscribe" class="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 ring-1 ring-white/30 text-white font-semibold backdrop-blur transition">
+            订阅每日推送
+          </a>
+        </div>
+        <dl class="mt-12 grid grid-cols-3 gap-4 sm:gap-8 max-w-xl">
+          <div>
+            <dt class="text-3xl sm:text-4xl font-black" id="statToday">0</dt>
+            <dd class="text-xs sm:text-sm text-brand-100 mt-1">今日精选</dd>
+          </div>
+          <div>
+            <dt class="text-3xl sm:text-4xl font-black" id="statWeek">0</dt>
+            <dd class="text-xs sm:text-sm text-brand-100 mt-1">本周累计</dd>
+          </div>
+          <div>
+            <dt class="text-3xl sm:text-4xl font-black">100<span class="text-base font-bold align-top ml-0.5">%</span></dt>
+            <dd class="text-xs sm:text-sm text-brand-100 mt-1">标注来源</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+    <svg class="absolute bottom-0 inset-x-0 w-full" viewBox="0 0 1440 80" fill="none" preserveAspectRatio="none" style="height:48px">
+      <path d="M0 80L1440 80L1440 40C1200 70 960 10 720 20C480 30 240 70 0 40L0 80Z" fill="#f8fafc"/>
+    </svg>
+  </section>
+
+  <!-- 信息列表 -->
+  <section id="list" class="py-16 sm:py-20 bg-slate-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 reveal">
+        <div>
+          <span class="text-brand-600 font-semibold text-sm tracking-wider">TODAY</span>
+          <h2 class="mt-1 text-2xl sm:text-3xl font-black text-slate-900">今日精选信息</h2>
+          <p class="mt-2 text-sm text-slate-500">点击卡片查看详情 · 标注「已核实」为人工确认有效</p>
+        </div>
+        <div class="text-sm text-slate-500">更新时间：<span id="updateTime" class="font-semibold text-slate-700">--</span></div>
+      </div>
+
+      <!-- 筛选栏 -->
+      <div class="mt-8 bg-white rounded-2xl border border-slate-100 p-5 reveal">
+        <div class="space-y-4">
+          <div>
+            <div class="text-xs font-semibold text-slate-400 mb-2">任务类型</div>
+            <div class="flex flex-wrap gap-2" id="filterType">
+              <button class="chip active px-3 py-1.5 rounded-full border border-slate-200 text-sm bg-white" data-val="all">全部</button>
+              <button class="chip px-3 py-1.5 rounded-full border border-slate-200 text-sm bg-white" data-val="促销导购">促销导购</button>
+              <button class="chip px-3 py-1.5 rounded-full border border-slate-200 text-sm bg-white" data-val="传单派发">传单派发</button>
+              <button class="chip px-3 py-1.5 rounded-full border border-slate-200 text-sm bg-white" data-val="活动执行">活动执行</button>
+              <button class="chip px-3 py-1.5 rounded-full border border-slate-200 text-sm bg-white" data-val="搬运装卸">搬运装卸</button>
+              <button class="chip px-3 py-1.5 rounded-full border border-slate-200 text-sm bg-white" data-val="客服录入">客服录入</button>
+              <button class="chip px-3 py-1.5 rounded-full border border-slate-200 text-sm bg-white" data-val="其他">其他</button>
+            </div>
+          </div>
+          <div>
+            <div class="text-xs font-semibold text-slate-400 mb-2">结算方式</div>
+            <div class="flex flex-wrap gap-2" id="filterSettle">
+              <button class="chip active px-3 py-1.5 rounded-full border border-slate-200 text-sm bg-white" data-val="all">全部</button>
+              <button class="chip px-3 py-1.5 rounded-full border border-slate-200 text-sm bg-white" data-val="日结">日结</button>
+              <button class="chip px-3 py-1.5 rounded-full border border-slate-200 text-sm bg-white" data-val="周结">周结</button>
+              <button class="chip px-3 py-1.5 rounded-full border border-slate-200 text-sm bg-white" data-val="完工结">完工结</button>
+            </div>
+          </div>
+          <div>
+            <div class="text-xs font-semibold text-slate-400 mb-2">核实状态</div>
+            <div class="flex flex-wrap gap-2" id="filterVerify">
+              <button class="chip active px-3 py-1.5 rounded-full border border-slate-200 text-sm bg-white" data-val="all">全部</button>
+              <button class="chip px-3 py-1.5 rounded-full border border-slate-200 text-sm bg-white" data-val="verified">已核实</button>
+              <button class="chip px-3 py-1.5 rounded-full border border-slate-200 text-sm bg-white" data-val="unverified">待核实</button>
+            </div>
+          </div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-sm">
+          <span class="text-slate-500">筛选结果 <b id="resultCount" class="text-slate-800">0</b> 条</span>
+          <button id="resetFilter" class="text-brand-600 hover:text-brand-700 font-semibold">重置筛选</button>
+        </div>
+      </div>
+
+      <!-- 信息卡片列表 -->
+      <div id="jobList" class="mt-6 space-y-4"></div>
+      <div id="emptyState" class="hidden text-center py-16 text-slate-400">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="mx-auto mb-3 opacity-50"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <p>没有符合条件的信息</p>
+        <p class="text-sm mt-1">试试调整筛选条件，或明天再来看看</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 怎么筛选 -->
+  <section id="how" class="py-20 sm:py-24 bg-white">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="text-center max-w-2xl mx-auto reveal">
+        <span class="text-brand-600 font-semibold text-sm tracking-wider">METHOD</span>
+        <h2 class="mt-2 text-3xl sm:text-4xl font-black text-slate-900">这些信息怎么来的</h2>
+        <p class="mt-4 text-slate-500">透明说清楚，不藏着掖着。</p>
+      </div>
+      <div class="mt-12 grid sm:grid-cols-3 gap-6">
+        <div class="reveal bg-slate-50 rounded-2xl p-6 border border-slate-100">
+          <div class="w-11 h-11 rounded-xl bg-brand-50 text-brand-600 grid place-items-center mb-4">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          </div>
+          <h3 class="font-bold text-slate-900">人工筛选</h3>
+          <p class="mt-2 text-sm text-slate-600 leading-relaxed">每天从深圳人社局官网、正规招聘平台公开页、深圳本地论坛等公开渠道人工浏览筛选，不用爬虫批量抓取。</p>
+        </div>
+        <div class="reveal bg-slate-50 rounded-2xl p-6 border border-slate-100">
+          <div class="w-11 h-11 rounded-xl bg-brand-50 text-brand-600 grid place-items-center mb-4">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <h3 class="font-bold text-slate-900">逐条标注</h3>
+          <p class="mt-2 text-sm text-slate-600 leading-relaxed">每条信息标注来源渠道和核实状态。「已核实」表示人工确认过联系方式有效，「待核实」需要你自己判断。</p>
+        </div>
+        <div class="reveal bg-slate-50 rounded-2xl p-6 border border-slate-100">
+          <div class="w-11 h-11 rounded-xl bg-brand-50 text-brand-600 grid place-items-center mb-4">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3 class="font-bold text-slate-900">不担保不抽成</h3>
+          <p class="mt-2 text-sm text-slate-600 leading-relaxed">只做信息展示，不参与对接、不抽成、不担保。联系前自己核实，遇到要交押金/培训费的一律是骗。</p>
+        </div>
+      </div>
+      <div class="mt-8 bg-amber-50 border border-amber-200 rounded-xl p-5 reveal">
+        <div class="flex gap-3">
+          <svg class="shrink-0 text-amber-600 mt-0.5" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+          <div class="text-sm text-amber-800 leading-relaxed">
+            <b>防骗提醒：</b>正规日结不会要你先交钱。遇到要求<b>押金、培训费、服装费、体检费、办卡费</b>的，一律拒绝。凡是要先转账验证身份的，100%是骗。发现可疑信息，请通过公众号留言反馈。
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 订阅推送 -->
+  <section id="subscribe" class="py-20 sm:py-24 bg-slate-900 text-white relative overflow-hidden">
+    <div class="absolute inset-0 opacity-20" style="background:radial-gradient(800px 400px at 20% 0%, #14b8a6, transparent 60%), radial-gradient(600px 300px at 90% 100%, #f97316, transparent 60%)"></div>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 relative">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="reveal">
+          <span class="text-brand-300 font-semibold text-sm tracking-wider">SUBSCRIBE</span>
+          <h2 class="mt-2 text-3xl sm:text-4xl font-black">每日推送，不用天天来翻</h2>
+          <p class="mt-4 text-slate-300 leading-relaxed">关注公众号，每天早上收到当日精选日结信息汇总。比来网站翻更省事，也不会错过急单。</p>
+          <ul class="mt-6 space-y-3 text-sm text-slate-200">
+            <li class="flex items-center gap-3"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5eead4" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> 每日早 8 点推送当日精选</li>
+            <li class="flex items-center gap-3"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5eead4" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> 急单实时群内通知</li>
+            <li class="flex items-center gap-3"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5eead4" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> 完全免费，关注就行</li>
+          </ul>
+        </div>
+        <div class="reveal">
+          <div class="bg-white rounded-2xl p-6 text-center">
+            <img src="qrcode.jpg" alt="深圳讯结科技公众号二维码" class="w-48 h-48 mx-auto rounded-lg" />
+            <p class="mt-4 font-bold text-slate-800">扫码关注公众号</p>
+            <p class="text-sm text-slate-500 mt-1">每日精选直接推到你手机</p>
+            <p class="text-xs text-slate-400 mt-3">公众号名称：<b class="text-slate-600">深圳讯结科技</b></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 发包/接活入口 -->
+  <section id="post" class="py-20 sm:py-24 bg-slate-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="text-center max-w-2xl mx-auto reveal">
+        <span class="text-brand-600 font-semibold text-sm tracking-wider">CONNECT</span>
+        <h2 class="mt-2 text-3xl sm:text-4xl font-black text-slate-900">发包 / 接活</h2>
+        <p class="mt-4 text-slate-500">有日结活要找人？想接日结活？两条路都行。</p>
+      </div>
+      <div class="mt-12 grid md:grid-cols-2 gap-6">
+        <div class="reveal bg-white rounded-2xl p-7 border border-slate-100 shadow-sm card-hover">
+          <div class="w-12 h-12 rounded-xl bg-accent-50 text-accent-500 grid place-items-center mb-5" style="background:#fff7ed">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900">我是雇主，要发日结活</h3>
+          <p class="mt-2 text-sm text-slate-500">有促销、派发、活动、搬运等临时活要找人，可以把信息提交给我筛选发布。</p>
+          <ul class="mt-4 space-y-2 text-sm text-slate-600">
+            <li class="flex gap-2"><span class="text-accent-500">·</span>免费发布，不收费用</li>
+            <li class="flex gap-2"><span class="text-accent-500">·</span>人工核实后展示，提升可信度</li>
+            <li class="flex gap-2"><span class="text-accent-500">·</span>同步到公众号推送，触达更多人</li>
+          </ul>
+          <a href="#post" onclick="alert('请通过公众号联系提交信息，见页面下方二维码。');return false;" class="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-accent-500 hover:bg-accent-600 text-white text-sm font-semibold transition">
+            提交需求
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+        <div class="reveal bg-white rounded-2xl p-7 border border-slate-100 shadow-sm card-hover">
+          <div class="w-12 h-12 rounded-xl bg-brand-50 text-brand-600 grid place-items-center mb-5">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900">我是接活人，想找日结活</h3>
+          <p class="mt-2 text-sm text-slate-500">直接看上面今日精选信息，或者关注公众号每天收推送。</p>
+          <ul class="mt-4 space-y-2 text-sm text-slate-600">
+            <li class="flex gap-2"><span class="text-brand-500">·</span>看信息直接联系，我不抽成</li>
+            <li class="flex gap-2"><span class="text-brand-500">·</span>关注公众号不错过每日更新</li>
+            <li class="flex gap-2"><span class="text-brand-500">·</span>遇到骗钱的一律反馈给我</li>
+          </ul>
+          <a href="#list" class="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold transition">
+            查看今日信息
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 免责声明 -->
+  <section class="py-12 bg-white border-t border-slate-100">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="bg-slate-50 rounded-xl p-6 text-sm text-slate-500 leading-relaxed">
+        <b class="text-slate-700">免责声明：</b>本站仅展示人工筛选自公开渠道的日结周结信息，不参与任何对接、不收取费用、不担保信息真实性。所有信息版权归原作者所有。求职前请自行核实，凡要求预先缴纳任何费用（押金、培训费、服装费、体检费、办卡费等）的均涉嫌诈骗，请立即拒绝并举报。如有信息侵权或失效，请通过公众号留言告知，核实后及时处理。
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-slate-900 text-slate-400 py-10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+          <span class="w-8 h-8 rounded-lg bg-brand-600 text-white grid place-items-center font-black text-sm">日</span>
+          <span class="text-white font-bold">深圳日结精选</span>
+        </div>
+        <p class="text-sm text-center sm:text-right">每日人工筛选 · 标注来源 · 不抽成不担保</p>
+      </div>
+      <div class="mt-6 pt-6 border-t border-slate-800 text-xs text-slate-500 text-center">
+        © 2026 深圳日结精选 · 信息来自公开渠道，仅供求职参考
+      </div>
+    </div>
+  </footer>
+
+  <a href="#top" id="backTop" class="fixed bottom-6 right-6 z-40 w-12 h-12 rounded-full bg-brand-600 hover:bg-brand-700 text-white grid place-items-center shadow-lg shadow-brand-600/30 opacity-0 pointer-events-none transition" aria-label="回到顶部">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  </a>
+
+  <script src="jobs-data.js"></script>
+  <script>
+    /* ============ 渲染逻辑 ============ */
+    // JOBS 数组由 jobs-data.js 加载（同一全局作用域），每天自动更新
+    const state = { type:'all', settle:'all', verify:'all' };
+
+    function formatDate(d){
+      const w=['周日','周一','周二','周三','周四','周五','周六'];
+      return `${d.getMonth()+1}月${d.getDate()}日 ${w[d.getDay()]} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    }
+
+    function renderList(){
+      const list = JOBS.filter(j => {
+        if(state.type!=='all' && j.type!==state.type) return false;
+        if(state.settle!=='all' && j.settle!==state.settle) return false;
+        if(state.verify==='verified' && !j.verified) return false;
+        if(state.verify==='unverified' && j.verified) return false;
+        return true;
+      });
+      const container = document.getElementById('jobList');
+      const empty = document.getElementById('emptyState');
+      document.getElementById('resultCount').textContent = list.length;
+      if(list.length===0){
+        container.innerHTML='';
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+      container.innerHTML = list.map(j => `
+        <div class="card-hover bg-white rounded-2xl border border-slate-100 overflow-hidden">
+          <div class="p-5 cursor-pointer" onclick="toggleDetail(${j.id})">
+            <div class="flex items-start justify-between gap-4">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap mb-2">
+                  <span class="px-2 py-0.5 rounded text-xs font-semibold ${j.settle==='日结'?'bg-rose-50 text-rose-600':j.settle==='周结'?'bg-amber-50 text-amber-600':'bg-sky-50 text-sky-600'}">${j.settle}</span>
+                  <span class="px-2 py-0.5 rounded text-xs bg-slate-100 text-slate-600">${j.type}</span>
+                  ${j.verified
+                    ? '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs bg-green-50 text-green-700"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>已核实</span>'
+                    : '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs bg-slate-100 text-slate-500"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>待核实</span>'}
+                </div>
+                <h3 class="text-base sm:text-lg font-bold text-slate-900">${j.title}</h3>
+                <div class="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-500">
+                  <span class="flex items-center gap-1"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>${j.area}</span>
+                  <span class="flex items-center gap-1"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>${j.time}</span>
+                </div>
+              </div>
+              <div class="text-right shrink-0">
+                <div class="text-lg font-black text-accent-500">${j.salary}</div>
+                <svg class="mt-2 text-slate-300 transition-transform" id="arrow-${j.id}" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="detail" id="detail-${j.id}">
+            <div class="px-5 pb-5 pt-1 border-t border-slate-100 text-sm text-slate-600 leading-relaxed space-y-3">
+              <p>${j.desc}</p>
+              <div class="grid sm:grid-cols-2 gap-3 pt-2">
+                <div><span class="text-slate-400">来源：</span><span class="text-slate-700">${j.source}</span></div>
+                <div><span class="text-slate-400">结算：</span><span class="text-slate-700">${j.settle}，验收后清款</span></div>
+              </div>
+              <a href="${j.link}" target="_blank" rel="noopener noreferrer" class="bg-brand-600 hover:bg-brand-700 rounded-lg p-3 flex items-center justify-center gap-2 text-white text-sm font-semibold transition no-underline">
+                <svg class="shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6M10 14 21 3"/></svg>
+                <span>${j.contact}（1010兼职网）</span>
+              </a>
+              ${j.verified ? '' : `
+              <div class="bg-amber-50 rounded-lg p-3 flex items-start gap-2">
+                <svg class="shrink-0 text-amber-600 mt-0.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+                <span class="text-amber-800 text-sm">该信息尚未核实。联系前请多确认，遇到要求预交任何费用的一律拒绝。</span>
+              </div>`}
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleDetail(id){
+      const d = document.getElementById('detail-'+id);
+      const a = document.getElementById('arrow-'+id);
+      d.classList.toggle('open');
+      a.style.transform = d.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0)';
+    }
+
+    // 筛选绑定
+    function bindFilter(containerId, key){
+      document.getElementById(containerId).addEventListener('click', e => {
+        const btn = e.target.closest('.chip');
+        if(!btn) return;
+        document.querySelectorAll('#'+containerId+' .chip').forEach(c=>c.classList.remove('active'));
+        btn.classList.add('active');
+        state[key] = btn.dataset.val;
+        renderList();
+      });
+    }
+    bindFilter('filterType','type');
+    bindFilter('filterSettle','settle');
+    bindFilter('filterVerify','verify');
+
+    document.getElementById('resetFilter').addEventListener('click', () => {
+      state.type='all'; state.settle='all'; state.verify='all';
+      document.querySelectorAll('.chip').forEach(c => {
+        c.classList.toggle('active', c.dataset.val==='all');
+      });
+      renderList();
+    });
+
+    // 统计 & 时间
+    const now = new Date();
+    document.getElementById('todayLabel').textContent = formatDate(now) + ' 更新';
+    document.getElementById('updateTime').textContent = formatDate(now);
+    document.getElementById('statToday').textContent = JOBS.length;
+    document.getElementById('statWeek').textContent = JOBS.length + 12; // 示例：本周累计
+
+    renderList();
+
+    // 滚动动画
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('show'); });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // 移动端菜单
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const menuIcon = document.getElementById('menuIcon');
+    let menuOpen = false;
+    menuBtn.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      mobileMenu.classList.toggle('hidden', !menuOpen);
+      menuIcon.innerHTML = menuOpen ? '<path d="M6 6l12 12M6 18L18 6"/>' : '<path d="M3 6h18M3 12h18M3 18h18"/>';
+    });
+    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      menuOpen = false;
+      mobileMenu.classList.add('hidden');
+      menuIcon.innerHTML = '<path d="M3 6h18M3 12h18M3 18h18"/>';
+    }));
+
+    // 回到顶部
+    const backTop = document.getElementById('backTop');
+    window.addEventListener('scroll', () => {
+      const show = window.scrollY > 600;
+      backTop.classList.toggle('opacity-0', !show);
+      backTop.classList.toggle('pointer-events-none', !show);
+    });
+  </script>
+</body>
+</html>
